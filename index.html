@@ -14,7 +14,16 @@
         .screen { width: 100%; height: 100%; display: flex; flex-direction: column; box-sizing: border-box; background-size: cover; background-position: center; transition: opacity 0.4s ease-in-out, background-image 0.5s ease-in-out; position: absolute; top: 0; left: 0;}
         .hidden { opacity: 0; pointer-events: none; }
         #recommendScreen { justify-content: space-between; padding: 40px 20px 20px 20px; }
-        .result-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+        .result-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--dark-text);
+            text-shadow: none;
+        }
         #foodImage { width: 80%; max-width: 300px; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; margin-bottom: 20px; background-color: rgba(255,255,255,0.2); transition: opacity 0.4s ease; border: 3px solid rgba(255,255,255,0.5); }
         #resultText { font-size: 24px; font-weight: bold; min-height: 70px; }
         .button-group { width: 100%; display: flex; flex-direction: column; gap: 10px; }
@@ -66,14 +75,7 @@
         const DATA_KEY = 'lunchMenuData';
         let menuData, currentCategory = '', lastSpecificMenu = null, selectedCategory = null, selectedMenu = null;
         const recommendScreen = document.getElementById('recommendScreen'), manageScreen = document.getElementById('manageScreen'), foodImage = document.getElementById('foodImage'), resultText = document.getElementById('resultText'), actionButtons = document.getElementById('actionButtons');
-        
-        function loadData() {
-            const savedData = localStorage.getItem(DATA_KEY);
-            if (savedData) { return JSON.parse(savedData); }
-            const defaultData = {"한식": [{"name": "김치찌개", "image": "images/kimchi_jjigae.jpg"}, {"name": "보쌈", "image": "images/bossam.jpg"}, {"name": "육회비빔밥", "image": "images/bibimbap.jpg"}, {"name": "떡볶이", "image": "images/tteokbokki.jpg"}, {"name": "짜글이", "image": "images/jjaguli.jpg"}, {"name": "김밥", "image": "images/kimbap.jpg"}, {"name": "국밥", "image": "images/gukbap.jpg"}, {"name": "국수", "image": "images/noodle.jpg"}, {"name": "샤브샤브", "image": "images/shabushabu.jpg"}, {"name": "닭갈비", "image": "images/dakgalbi.jpg"}], "중식": [{"name": "마라탕", "image": "images/maratang.jpg"}, {"name": "짜장면", "image": "images/jjajangmyeon.jpg"}, {"name": "짬뽕", "image": "images/jjamppong.jpg"}, {"name": "만두", "image": "images/mandu.jpg"}], "일식": [{"name": "돈까스", "image": "images/donkkaseu.jpg"}, {"name": "라멘", "image": "images/ramen.jpg"}, {"name": "연어", "image": "images/salmon.jpg"}, {"name": "우동", "image": "images/udon.jpg"}, {"name": "덮밥", "image": "images/donburi.jpg"}], "양식": [{"name": "파스타", "image": "images/pasta.jpg"}, {"name": "햄버거", "image": "images/hamburger.jpg"}, {"name": "피자", "image": "images/pizza.jpg"}, {"name": "샐러드", "image": "images/salad.jpg"}, {"name": "샌드위치", "image": "images/sandwich.jpg"}]};
-            saveData(defaultData);
-            return defaultData;
-        }
+        function loadData() { const savedData = localStorage.getItem(DATA_KEY); if (savedData) { return JSON.parse(savedData); } const defaultData = {"한식": [{"name": "김치찌개", "image": "images/kimchi_jjigae.jpg"}, {"name": "보쌈", "image": "images/bossam.jpg"}, {"name": "육회비빔밥", "image": "images/bibimbap.jpg"}, {"name": "떡볶이", "image": "images/tteokbokki.jpg"}, {"name": "짜글이", "image": "images/jjaguli.jpg"}, {"name": "김밥", "image": "images/kimbap.jpg"}, {"name": "국밥", "image": "images/gukbap.jpg"}, {"name": "국수", "image": "images/noodle.jpg"}, {"name": "샤브샤브", "image": "images/shabushabu.jpg"}, {"name": "닭갈비", "image": "images/dakgalbi.jpg"}], "중식": [{"name": "마라탕", "image": "images/maratang.jpg"}, {"name": "짜장면", "image": "images/jjajangmyeon.jpg"}, {"name": "짬뽕", "image": "images/jjamppong.jpg"}, {"name": "만두", "image": "images/mandu.jpg"}], "일식": [{"name": "돈까스", "image": "images/donkkaseu.jpg"}, {"name": "라멘", "image": "images/ramen.jpg"}, {"name": "연어", "image": "images/salmon.jpg"}, {"name": "우동", "image": "images/udon.jpg"}, {"name": "덮밥", "image": "images/donburi.jpg"}], "양식": [{"name": "파스타", "image": "images/pasta.jpg"}, {"name": "햄버거", "image": "images/hamburger.jpg"}, {"name": "피자", "image": "images/pizza.jpg"}, {"name": "샐러드", "image": "images/salad.jpg"}, {"name": "샌드위치", "image": "images/sandwich.jpg"}]}; saveData(defaultData); return defaultData; }
         function saveData(data) { localStorage.setItem(DATA_KEY, JSON.stringify(data)); }
         function recommendCategory() { recommendScreen.style.backgroundImage = `url('images/recommend_background.jpg')`; const availableCategories = Object.keys(menuData).filter(cat => menuData[cat].length > 0); if (availableCategories.length === 0) { resultText.innerHTML = "메뉴가 없습니다."; return; } let choice = currentCategory; if (availableCategories.length > 1) { while(choice === currentCategory) { choice = availableCategories[Math.floor(Math.random() * availableCategories.length)]; } } else { choice = availableCategories[0]; } currentCategory = choice; resultText.innerHTML = `<b>${currentCategory}</b><br><br>어떠세요?`; foodImage.style.opacity = 0; updateActionButtons('category_recommended'); }
         function recommendSpecificMenu() { const menuList = menuData[currentCategory]; if (!menuList || menuList.length === 0) return; let availableMenus = [...menuList]; if (lastSpecificMenu && availableMenus.length > 1) { availableMenus = availableMenus.filter(item => item.name !== lastSpecificMenu.name); } const choice = availableMenus[Math.floor(Math.random() * availableMenus.length)]; lastSpecificMenu = choice; resultText.innerHTML = `${currentCategory}<br><br>👉 <b>${choice.name}</b> 👈`; foodImage.src = choice.image; foodImage.style.opacity = 1; updateActionButtons('specific_recommended'); }
