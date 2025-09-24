@@ -4,149 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>점심 메뉴 추천</title>
-    <link rel="manifest" href="manifest.json"> <style>
+    <link rel="manifest" href="manifest.json">
     <style>
-        /* 기본 스타일 */
         :root {
             --primary-color: #3498db;
             --secondary-color: #2c3e50;
             --danger-color: #e74c3c;
+            --success-color: #2ecc71;
             --light-gray: #ecf0f1;
             --dark-text: #34495e;
         }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            color: var(--dark-text);
-            overflow: hidden;
-        }
-
-        /* 화면 컨테이너 */
-        .screen {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            background-size: cover;
-            background-position: center;
-            transition: background-image 0.5s ease-in-out;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* 추천 화면 스타일 */
-        #recommendScreen {
-            justify-content: space-between;
-            padding: 40px 20px 20px 20px;
-        }
-
-        .result-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: black; /* 배경이 어두울 것을 대비해 기본 글자색 흰색으로 */
-            /*text-shadow: 1px 1px 3px rgba(0,0,0,0.5);*/ /* 글자 그림자 */
-        }
-
-        #foodImage {
-            width: 80%;
-            max-width: 300px;
-            height: auto;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            background-color: rgba(255,255,255,0.2);
-            transition: opacity 0.4s ease;
-            border: 3px solid rgba(255,255,255,0.5);
-        }
-
-        #resultText {
-            font-size: 24px;
-            font-weight: bold;
-            min-height: 70px;
-        }
-
-        .button-group {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            color: white;
-            transition: background-color 0.2s ease;
-        }
-
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: var(--dark-text); overflow: hidden; }
+        .screen { width: 100%; height: 100%; display: flex; flex-direction: column; box-sizing: border-box; background-size: cover; background-position: center; transition: background-image 0.5s ease-in-out; }
+        .hidden { display: none !important; }
+        #recommendScreen { justify-content: space-between; padding: 40px 20px 20px 20px; }
+        .result-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+        #foodImage { width: 80%; max-width: 300px; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; margin-bottom: 20px; background-color: rgba(255,255,255,0.2); transition: opacity 0.4s ease; border: 3px solid rgba(255,255,255,0.5); }
+        #resultText { font-size: 24px; font-weight: bold; min-height: 70px; }
+        .button-group { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+        .action-buttons { display: flex; gap: 10px; }
+        button { width: 100%; padding: 15px; font-size: 18px; font-weight: bold; border: none; border-radius: 12px; cursor: pointer; color: white; transition: background-color 0.2s ease; }
         .btn-main { background-color: var(--primary-color); }
         .btn-manage { background-color: var(--secondary-color); }
         .btn-action { background-color: #95a5a6; }
         .btn-back { background-color: var(--danger-color); }
-
-        button:active {
-            opacity: 0.8;
-        }
-
-        /* 관리 화면 스타일 */
-        #manageScreen {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background-image: url('images/manage_background.jpg'); /* <-- 수정됨 */
-        }
-
-        .list-container {
-            flex-grow: 1;
-            background-color: rgba(255,255,255,0.8);
-            border-radius: 12px;
-            padding: 10px;
-            overflow-y: auto;
-        }
-        
-        .list-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            cursor: pointer;
-        }
-
-        .list-item.selected {
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 8px;
-        }
-        
-        .manage-buttons {
-            display: flex;
-            gap: 10px;
-        }
+        .btn-add { background-color: var(--success-color); }
+        .btn-delete { background-color: var(--danger-color); }
+        button:active { opacity: 0.8; }
+        #manageScreen { padding: 20px; display: flex; flex-direction: column; gap: 15px; background-image: url('images/manage_background.jpg'); }
+        .list-container { flex-grow: 1; background-color: rgba(255,255,255,0.8); border-radius: 12px; padding: 10px; overflow-y: auto; }
+        .list-item { padding: 10px; border-bottom: 1px solid #ddd; cursor: pointer; }
+        .list-item.selected { background-color: var(--primary-color); color: white; border-radius: 8px; }
+        .manage-buttons { display: flex; gap: 10px; }
+        h2 { color: white; text-shadow: 1px 1px 2px black; margin-top: 5px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
-
     <div id="recommendScreen" class="screen">
         <div class="result-container">
             <img id="foodImage" src="">
@@ -155,265 +48,36 @@
         <div class="button-group">
             <div id="actionButtons" class="action-buttons"></div>
             <button id="recommendButton" class="btn-main">메뉴 추천!</button>
-            <button id="manageButton" class="btn-manage">메뉴 관리⚙️</button>
+            <button id="manageButton" class="btn-manage">메뉴 관리 ⚙️</button>
         </div>
     </div>
-
     <div id="manageScreen" class="screen hidden">
         <h2>카테고리</h2>
         <div id="categoryList" class="list-container"></div>
         <div class="manage-buttons">
-            <button id="addCategoryBtn">추가</button>
-            <button id="deleteCategoryBtn">삭제</button>
+            <button id="addCategoryBtn" class="btn-add">추가</button>
+            <button id="deleteCategoryBtn" class="btn-delete">삭제</button>
         </div>
-        
         <h2 id="menuListTitle">메뉴</h2>
         <div id="menuList" class="list-container"></div>
         <div class="manage-buttons">
-            <button id="addMenuBtn">추가</button>
-            <button id="deleteMenuBtn">삭제</button>
+            <button id="addMenuBtn" class="btn-add">추가</button>
+            <button id="deleteMenuBtn" class="btn-delete">삭제</button>
         </div>
-
         <button id="backButton" class="btn-back">추천 화면으로 돌아가기</button>
     </div>
-
     <script>
         const DATA_KEY = 'lunchMenuData';
-        let menuData;
-        let currentCategory = '';
-        let lastSpecificMenu = null;
-        let selectedCategory = null;
-        let selectedMenu = null;
-
-        // UI 요소 가져오기
-        const recommendScreen = document.getElementById('recommendScreen');
-        const manageScreen = document.getElementById('manageScreen');
-        const foodImage = document.getElementById('foodImage');
-        const resultText = document.getElementById('resultText');
-        const actionButtons = document.getElementById('actionButtons');
-        
-        // 데이터 로드 및 저장 (localStorage 사용)
-        function loadData() {
-            const savedData = localStorage.getItem(DATA_KEY);
-            if (savedData) {
-                return JSON.parse(savedData);
-            } else {
-                const defaultData = {
-                    "한식": [{"name": "김치찌개", "image": "images/kimchi_jjigae.jpg"}, {"name": "보쌈", "image": "images/bossam.jpg"}, {"name": "육회비빔밥", "image": "images/bibimbap.jpg"}, {"name": "떡볶이", "image": "images/tteokbokki.jpg"}, {"name": "짜글이", "image": "images/jjaguli.jpg"}, {"name": "김밥", "image": "images/kimbap.jpg"}, {"name": "국밥", "image": "images/gukbap.jpg"}, {"name": "국수", "image": "images/noodle.jpg"}, {"name": "샤브샤브", "image": "images/shabushabu.jpg"}, {"name": "닭갈비", "image": "images/dakgalbi.jpg"}],
-                    "중식": [{"name": "마라탕", "image": "images/maratang.jpg"}, {"name": "짜장면", "image": "images/jjajangmyeon.jpg"}, {"name": "짬뽕", "image": "images/jjamppong.jpg"}, {"name": "만두", "image": "images/mandu.jpg"}],
-                    "일식": [{"name": "돈까스", "image": "images/donkkaseu.jpg"}, {"name": "라멘", "image": "images/ramen.jpg"}, {"name": "연어", "image": "images/salmon.jpg"}, {"name": "우동", "image": "images/udon.jpg"}, {"name": "덮밥", "image": "images/donburi.jpg"}],
-                    "양식": [{"name": "파스타", "image": "images/pasta.jpg"}, {"name": "햄버거", "image": "images/hamburger.jpg"}, {"name": "피자", "image": "images/pizza.jpg"}, {"name": "샐러드", "image": "images/salad.jpg"}, {"name": "샌드위치", "image": "images/sandwich.jpg"}]
-                };
-                saveData(defaultData);
-                return defaultData;
-            }
-        }
-
-        function saveData(data) {
-            localStorage.setItem(DATA_KEY, JSON.stringify(data));
-        }
-
-        // 추천 로직
-        function recommendCategory() {
-            recommendScreen.style.backgroundImage = `url('images/recommend_background.jpg')`; // <-- 수정됨
-            const availableCategories = Object.keys(menuData).filter(cat => menuData[cat].length > 0);
-            if (availableCategories.length === 0) {
-                resultText.innerHTML = "메뉴가 없습니다.";
-                return;
-            }
-            
-            let choice = currentCategory;
-            if (availableCategories.length > 1) {
-                while(choice === currentCategory) {
-                    choice = availableCategories[Math.floor(Math.random() * availableCategories.length)];
-                }
-            } else {
-                choice = availableCategories[0];
-            }
-            
-            currentCategory = choice;
-            resultText.innerHTML = `<b>${currentCategory}</b><br><br>어떠세요?`;
-            foodImage.style.opacity = 0;
-            updateActionButtons('category_recommended');
-        }
-        
-        function recommendSpecificMenu() {
-            const menuList = menuData[currentCategory];
-            if (!menuList || menuList.length === 0) return;
-            
-            let availableMenus = [...menuList];
-            if (lastSpecificMenu && availableMenus.length > 1) {
-                availableMenus = availableMenus.filter(item => item.name !== lastSpecificMenu.name);
-            }
-            
-            const choice = availableMenus[Math.floor(Math.random() * availableMenus.length)];
-            lastSpecificMenu = choice;
-            
-            resultText.innerHTML = `${currentCategory}<br><br>👉 <b>${choice.name}</b> 👈`;
-            foodImage.src = choice.image;
-            foodImage.style.opacity = 1;
-            updateActionButtons('specific_recommended');
-        }
-
-        function updateActionButtons(state) {
-            actionButtons.innerHTML = '';
-            if (state === 'home') return;
-            
-            if (state === 'category_recommended') {
-                const btnSpecific = document.createElement('button');
-                btnSpecific.className = 'btn-action';
-                btnSpecific.textContent = '구체적으로?';
-                btnSpecific.onclick = recommendSpecificMenu;
-                actionButtons.appendChild(btnSpecific);
-            }
-            
-            const btnReroll = document.createElement('button');
-            btnReroll.className = 'btn-action';
-            btnReroll.textContent = '싫어요 👎';
-            btnReroll.onclick = () => {
-                if(foodImage.style.opacity == 1) recommendSpecificMenu();
-                else recommendCategory();
-            };
-            actionButtons.appendChild(btnReroll);
-
-            const btnHome = document.createElement('button');
-            btnHome.className = 'btn-action';
-            btnHome.textContent = '처음으로 🏠';
-            btnHome.onclick = goToHomeScreen;
-            actionButtons.appendChild(btnHome);
-        }
-
-        function goToHomeScreen() {
-            resultText.innerHTML = '';
-            foodImage.src = '';
-            foodImage.style.opacity = 0;
-            currentCategory = '';
-            lastSpecificMenu = null;
-            recommendScreen.style.backgroundImage = `url('images/background.jpg')`; // <-- 수정됨
-            updateActionButtons('home');
-        }
-
-        // 화면 전환
-        function showManageScreen() {
-            updateCategoryList();
-            manageScreen.classList.remove('hidden');
-            recommendScreen.classList.add('hidden');
-        }
-
-        function showRecommendScreen() {
-            manageScreen.classList.add('hidden');
-            recommendScreen.classList.remove('hidden');
-        }
-
-        // 관리 로직
-        function updateCategoryList() {
-            const catListDiv = document.getElementById('categoryList');
-            catListDiv.innerHTML = '';
-            Object.keys(menuData).forEach(cat => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'list-item';
-                itemDiv.textContent = cat;
-                if (cat === selectedCategory) {
-                    itemDiv.classList.add('selected');
-                }
-                itemDiv.onclick = () => {
-                    selectedCategory = cat;
-                    selectedMenu = null;
-                    updateCategoryList();
-                    updateMenuList();
-                };
-                catListDiv.appendChild(itemDiv);
-            });
-        }
-
-        function updateMenuList() {
-            const menuListDiv = document.getElementById('menuList');
-            const menuListTitle = document.getElementById('menuListTitle');
-            menuListDiv.innerHTML = '';
-
-            if (selectedCategory) {
-                menuListTitle.textContent = `'${selectedCategory}' 메뉴`;
-                menuData[selectedCategory].forEach(menu => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'list-item';
-                    itemDiv.textContent = menu.name;
-                    if (menu.name === selectedMenu) {
-                        itemDiv.classList.add('selected');
-                    }
-                    itemDiv.onclick = () => {
-                        selectedMenu = menu.name;
-                        updateMenuList();
-                    };
-                    menuListDiv.appendChild(itemDiv);
-                });
-            } else {
-                menuListTitle.textContent = '메뉴';
-            }
-        }
-
-        // 초기화 및 이벤트 리스너
-        document.addEventListener('DOMContentLoaded', () => {
-            menuData = loadData();
-            goToHomeScreen();
-
-            document.getElementById('recommendButton').onclick = recommendCategory;
-            document.getElementById('manageButton').onclick = showManageScreen;
-            document.getElementById('backButton').onclick = showRecommendScreen;
-            
-            document.getElementById('addCategoryBtn').onclick = () => {
-                const newCat = prompt("추가할 카테고리 이름을 입력하세요:");
-                if (newCat && !menuData[newCat]) {
-                    menuData[newCat] = [];
-                    saveData(menuData);
-                    selectedCategory = newCat;
-                    updateCategoryList();
-                    updateMenuList();
-                }
-            };
-            
-            document.getElementById('deleteCategoryBtn').onclick = () => {
-                if (selectedCategory && confirm(`'${selectedCategory}' 카테고리를 정말 삭제하시겠습니까?`)) {
-                    delete menuData[selectedCategory];
-                    saveData(menuData);
-                    selectedCategory = null;
-                    selectedMenu = null;
-                    updateCategoryList();
-                    updateMenuList();
-                }
-            };
-
-            document.getElementById('addMenuBtn').onclick = () => {
-                if (selectedCategory) {
-                    const newMenuName = prompt(`'${selectedCategory}'에 추가할 메뉴 이름을 입력하세요:`);
-                    const newMenuImage = prompt(`'${newMenuName}'의 이미지 경로를 입력하세요 (예: images/new.jpg):`, 'images/');
-                    if (newMenuName && newMenuImage) {
-                        menuData[selectedCategory].push({name: newMenuName, image: newMenuImage});
-                        saveData(menuData);
-                        updateMenuList();
-                    }
-                }
-            };
-            
-            document.getElementById('deleteMenuBtn').onclick = () => {
-                if (selectedCategory && selectedMenu && confirm(`'${selectedMenu}' 메뉴를 정말 삭제하시겠습니까?`)) {
-                    menuData[selectedCategory] = menuData[selectedCategory].filter(item => item.name !== selectedMenu);
-                    saveData(menuData);
-                    selectedMenu = null;
-                    updateMenuList();
-                }
-            };
-        });
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                })
-                .catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-        });
-    }
-</script>
-</body>
-</html>
+        let menuData, currentCategory = '', lastSpecificMenu = null, selectedCategory = null, selectedMenu = null;
+        const recommendScreen = document.getElementById('recommendScreen'), manageScreen = document.getElementById('manageScreen'), foodImage = document.getElementById('foodImage'), resultText = document.getElementById('resultText'), actionButtons = document.getElementById('actionButtons');
+        function loadData() { const savedData = localStorage.getItem(DATA_KEY); if (savedData) { return JSON.parse(savedData); } else { const defaultData = {"한식": [{"name": "김치찌개", "image": "images/kimchi_jjigae.jpg"}, {"name": "보쌈", "image": "images/bossam.jpg"}, {"name": "육회비빔밥", "image": "images/bibimbap.jpg"}, {"name": "떡볶이", "image": "images/tteokbokki.jpg"}, {"name": "짜글이", "image": "images/jjaguli.jpg"}, {"name": "김밥", "image": "images/kimbap.jpg"}, {"name": "국밥", "image": "images/gukbap.jpg"}, {"name": "국수", "image": "images/noodle.jpg"}, {"name": "샤브샤브", "image": "images/shabushabu.jpg"}, {"name": "닭갈비", "image": "images/dakgalbi.jpg"}], "중식": [{"name": "마라탕", "image": "images/maratang.jpg"}, {"name": "짜장면", "image": "images/jjajangmyeon.jpg"}, {"name": "짬뽕", "image": "images/jjamppong.jpg"}, {"name": "만두", "image": "images/mandu.jpg"}], "일식": [{"name": "돈까스", "image": "images/donkkaseu.jpg"}, {"name": "라멘", "image": "images/ramen.jpg"}, {"name": "연어", "image": "images/salmon.jpg"}, {"name": "우동", "image": "images/udon.jpg"}, {"name": "덮밥", "image": "images/donburi.jpg"}], "양식": [{"name": "파스타", "image": "images/pasta.jpg"}, {"name": "햄버거", "image": "images/hamburger.jpg"}, {"name": "피자", "image": "images/pizza.jpg"}, {"name": "샐러드", "image": "images/salad.jpg"}, {"name": "샌드위치", "image": "images/sandwich.jpg"}]}; saveData(defaultData); return defaultData; } }
+        function saveData(data) { localStorage.setItem(DATA_KEY, JSON.stringify(data)); }
+        function recommendCategory() { recommendScreen.style.backgroundImage = `url('images/recommend_background.jpg')`; const availableCategories = Object.keys(menuData).filter(cat => menuData[cat].length > 0); if (availableCategories.length === 0) { resultText.innerHTML = "메뉴가 없습니다."; return; } let choice = currentCategory; if (availableCategories.length > 1) { while(choice === currentCategory) { choice = availableCategories[Math.floor(Math.random() * availableCategories.length)]; } } else { choice = availableCategories[0]; } currentCategory = choice; resultText.innerHTML = `<b>${currentCategory}</b><br><br>어떠세요?`; foodImage.style.opacity = 0; updateActionButtons('category_recommended'); }
+        function recommendSpecificMenu() { const menuList = menuData[currentCategory]; if (!menuList || menuList.length === 0) return; let availableMenus = [...menuList]; if (lastSpecificMenu && availableMenus.length > 1) { availableMenus = availableMenus.filter(item => item.name !== lastSpecificMenu.name); } const choice = availableMenus[Math.floor(Math.random() * availableMenus.length)]; lastSpecificMenu = choice; resultText.innerHTML = `${currentCategory}<br><br>👉 <b>${choice.name}</b> 👈`; foodImage.src = choice.image; foodImage.style.opacity = 1; updateActionButtons('specific_recommended'); }
+        function updateActionButtons(state) { actionButtons.innerHTML = ''; if (state === 'home') return; if (state === 'category_recommended') { const btnSpecific = document.createElement('button'); btnSpecific.className = 'btn-action'; btnSpecific.textContent = '구체적으로?'; btnSpecific.onclick = recommendSpecificMenu; actionButtons.appendChild(btnSpecific); } const btnReroll = document.createElement('button'); btnReroll.className = 'btn-action'; btnReroll.textContent = '싫어요 👎'; btnReroll.onclick = () => { if(foodImage.style.opacity == 1) recommendSpecificMenu(); else recommendCategory(); }; actionButtons.appendChild(btnReroll); const btnHome = document.createElement('button'); btnHome.className = 'btn-action'; btnHome.textContent = '처음으로 🏠'; btnHome.onclick = goToHomeScreen; actionButtons.appendChild(btnHome); }
+        function goToHomeScreen() { resultText.innerHTML = ''; foodImage.src = ''; foodImage.style.opacity = 0; currentCategory = ''; lastSpecificMenu = null; recommendScreen.style.backgroundImage = `url('images/background.jpg')`; updateActionButtons('home'); }
+        function showManageScreen() { updateCategoryList(); updateMenuList(); manageScreen.classList.remove('hidden'); recommendScreen.classList.add('hidden'); }
+        function showRecommendScreen() { manageScreen.classList.add('hidden'); recommendScreen.classList.remove('hidden'); }
+        function updateCategoryList() { const catListDiv = document.getElementById('categoryList'); catListDiv.innerHTML = ''; Object.keys(menuData).sort().forEach(cat => { const itemDiv = document.createElement('div'); itemDiv.className = 'list-item'; itemDiv.textContent = cat; if (cat === selectedCategory) { itemDiv.classList.add('selected'); } itemDiv.onclick = () => { selectedCategory = cat; selectedMenu = null; updateCategoryList(); updateMenuList(); }; catListDiv.appendChild(itemDiv); }); }
+        function updateMenuList() { const menuListDiv = document.getElementById('menuList'), menuListTitle = document.getElementById('menuListTitle'); menuListDiv.innerHTML = ''; if (selectedCategory) { menuListTitle.textContent = `'${selectedCategory}' 메뉴`; menuData[selectedCategory].sort((a, b) => a.name.localeCompare(b.name)).forEach(menu => { const itemDiv = document.createElement('div'); itemDiv.className = 'list-item'; itemDiv.textContent = menu.name; if (menu.name === selectedMenu) { itemDiv.classList.add('selected'); } itemDiv.onclick = () => { selectedMenu = menu.name; updateMenuList(); }; menuListDiv.appendChild(itemDiv); }); } else { menuListTitle.textContent = '메뉴'; } }
+        document.addEventListener('
