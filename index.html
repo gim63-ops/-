@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>점심 메뉴 추천</title>
+    <link rel="manifest" href="manifest.json"> <style>
     <style>
         /* 기본 스타일 */
         :root {
@@ -54,7 +55,7 @@
             align-items: center;
             text-align: center;
             color: black; /* 배경이 어두울 것을 대비해 기본 글자색 흰색으로 */
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5); /* 글자 그림자 */
+            /*text-shadow: 1px 1px 3px rgba(0,0,0,0.5);*/ /* 글자 그림자 */
         }
 
         #foodImage {
@@ -154,7 +155,7 @@
         <div class="button-group">
             <div id="actionButtons" class="action-buttons"></div>
             <button id="recommendButton" class="btn-main">메뉴 추천!</button>
-            <button id="manageButton" class="btn-manage">메뉴 관리 ⚙️</button>
+            <button id="manageButton" class="btn-manage">메뉴 관리⚙️</button>
         </div>
     </div>
 
@@ -402,7 +403,17 @@
                 }
             };
         });
-
-    </script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                })
+                .catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+        });
+    }
+</script>
 </body>
 </html>
